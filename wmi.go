@@ -50,6 +50,7 @@ func Query(host string, user string, pass string, namespace string, query string
 	if wmi_t == nil {
 		return nil, fmt.Errorf("unable to connect server")
 	}
+	defer C.wmi_close(wmi_t)
 	var outval *C.char
 	ret := C.wmi_query(wmi_t, C.CString(query), &outval)
 
