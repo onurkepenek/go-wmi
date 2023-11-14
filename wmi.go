@@ -36,7 +36,7 @@ func Query(host string, user string, pass string, namespace string, query string
 
 	args_list[0] = "wmic"
 	args_list[1] = "-U"
-	args_list[2] = fmt.Sprintf("%s%%%s", "onur", "Passw0rd")
+	args_list[2] = fmt.Sprintf("%s%%%s", user, pass)
 	args_list[3] = fmt.Sprintf("//%s%s", host, "[sign]")
 	args_list[4] = namespace
 
