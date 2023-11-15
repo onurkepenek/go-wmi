@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -14,8 +15,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	for _, item := range res {
-
-		fmt.Println(item)
+	bt, err := json.Marshal(res)
+	if err != nil {
+		log.Fatal(err.Error())
 	}
+
+	fmt.Println(string(bt))
 }

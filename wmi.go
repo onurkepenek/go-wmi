@@ -30,7 +30,7 @@ import (
 	"strings"
 )
 
-func Query(host string, user string, pass string, namespace string, query string) ([]map[string]string, error) {
+func Query(host string, user string, pass string, namespace string, query string) ([]map[string]interface{}, error) {
 
 	var args_list [5]string
 
@@ -63,7 +63,7 @@ func Query(host string, user string, pass string, namespace string, query string
 	}
 	//fmt.Println(C.GoString(outval))
 
-	var response []map[string]string
+	var response []map[string]interface{}
 	res := C.GoString(outval)
 	lines := strings.Split(res, "\n")
 
@@ -75,16 +75,27 @@ func Query(host string, user string, pass string, namespace string, query string
 			header = strings.Split(line, "|")
 			continue
 		}
-		item := make(map[string]string)
+		item := make(map[string]interface{})
 
 		fields := strings.Split(line, "|")
 
 		if len(fields) < 2 {
 			continue
 		}
-		for j, field := range fields {
 
-			item[header[j]] = field
+		if len(header) != len(fields) {
+			return nil, fmt.Errorf("header and fields length is not same")
+		}
+
+		for j, field := range fields {
+			if field == "(null)" {
+				item[header[j]] = nil
+			} else if strings.Contains(field, ";") {
+				item[header[j]] = strings.Split(field, ";")
+			} else {
+				item[header[j]] = field
+			}
+
 		}
 
 		response = append(response, item)
