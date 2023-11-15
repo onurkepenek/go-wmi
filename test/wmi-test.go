@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	res, err := gowmi.Query("10.0.2.10", "onur", "Passw0rd", "root\\cimv2", "SELECT Model FROM Win32_ComputerSystem")
+	res, err := gowmi.Query("10.0.2.10", "onur", "Passw0rd", "root\\cimv2", "SELECT * FROM Win32_ComputerSystem")
 	if err != nil {
 		log.Fatal(err.Error())
 	}

@@ -46,7 +46,7 @@ func Query(host string, user string, pass string, namespace string, query string
 		C.setArrayString(cargs, C.CString(s), C.int(i))
 	}
 
-	wmi_t := C.wmi_connect(C.int(5), cargs)
+	wmi_t := C.wmi_connect(C.int(len(args_list)), cargs)
 	if wmi_t == nil {
 		return nil, fmt.Errorf("unable to connect server")
 	}
@@ -83,6 +83,7 @@ func Query(host string, user string, pass string, namespace string, query string
 			continue
 		}
 		for j, field := range fields {
+
 			item[header[j]] = field
 		}
 
