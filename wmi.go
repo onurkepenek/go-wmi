@@ -2,7 +2,7 @@ package gowmi
 
 /*
 #cgo CFLAGS: -g -Wall -I/usr/include
-#cgo LDFLAGS: -lc -lm -lopenvas_wmiclient
+#cgo LDFLAGS: -lc -lm -L./ -lwmiclient  -lsamba-static -L/usr/lib/x86_64-linux-gnu/heimdal/ -lgssapi  -lgnutls -lgnutls-openssl  -lpopt -lkrb5 -lasn1 -lcom_err -ldl -lhdb
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
