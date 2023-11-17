@@ -11,3 +11,4 @@ Prerequisites
 * libgssapi-krb5-2
 * libkrb5-3
 * libgnutls30
+* libhdb9-heimdal
