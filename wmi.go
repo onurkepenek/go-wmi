@@ -76,10 +76,8 @@ func Query(host string, user string, pass string, namespace string, query string
 			continue
 		}
 		item := make(map[string]interface{})
-
 		fields := strings.Split(line, "|")
-
-		if len(fields) < 2 {
+		if len(fields) < 1 {
 			continue
 		}
 
@@ -88,6 +86,11 @@ func Query(host string, user string, pass string, namespace string, query string
 		}
 
 		for j, field := range fields {
+
+			if len(field) < 1 {
+				continue
+			}
+
 			if field == "(null)" {
 				item[header[j]] = nil
 			} else if strings.Contains(field, ";") {
@@ -98,7 +101,10 @@ func Query(host string, user string, pass string, namespace string, query string
 
 		}
 
-		response = append(response, item)
+		if len(item) > 0 {
+			response = append(response, item)
+		}
+
 	}
 
 	return response, nil
