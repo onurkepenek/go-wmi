@@ -82,7 +82,7 @@ func Query(host string, user string, pass string, namespace string, query string
 		}
 
 		if len(header) != len(fields) {
-			return nil, fmt.Errorf("header and fields length is not same")
+			continue
 		}
 
 		for j, field := range fields {
