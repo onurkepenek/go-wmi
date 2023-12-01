@@ -91,13 +91,7 @@ func Query(host string, user string, pass string, namespace string, query string
 				continue
 			}
 
-			if field == "(null)" {
-				item[header[j]] = nil
-			} else if strings.Contains(field, ";") {
-				item[header[j]] = strings.Split(field, ";")
-			} else {
-				item[header[j]] = field
-			}
+			item[header[j]] = parse(field)
 
 		}
 
