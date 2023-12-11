@@ -76,6 +76,7 @@ func Query(host string, user string, pass string, namespace string, query string
 			continue
 		}
 		item := make(map[string]interface{})
+		line = strings.Replace(line, "||", "|", -1)
 		fields := strings.Split(line, "|")
 		if len(fields) < 1 {
 			continue
