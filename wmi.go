@@ -6,7 +6,7 @@ package gowmi
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "openvas_wmi_interface.h"
+#include "wmi_interface.h"
 
 static char** makeCharArray(int size) {
         return calloc(sizeof(char*), size);
@@ -28,6 +28,9 @@ import "C"
 import (
 	"fmt"
 	"strings"
+	"unsafe"
+
+	"github.com/oiweiwei/go-msrpc/msrpc/erref/ntstatus"
 )
 
 func Query(host string, user string, pass string, namespace string, query string) ([]map[string]interface{}, error) {
@@ -45,21 +48,34 @@ func Query(host string, user string, pass string, namespace string, query string
 	for i, s := range args_list {
 		C.setArrayString(cargs, C.CString(s), C.int(i))
 	}
-
-	wmi_t := C.wmi_connect(C.int(len(args_list)), cargs)
+	var status uint32
+	c_status := (*C.uint32_t)(unsafe.Pointer(&status))
+	wmi_t := C.wmi_connect(C.int(len(args_list)), cargs, c_status)
 	if wmi_t == nil {
-		return nil, fmt.Errorf("unable to connect server")
+		return nil, fmt.Errorf(fmt.Sprintf("unable to connect server: %s", ntstatus.FromCode(status)))
 	}
 	defer C.wmi_close(wmi_t)
 	var outval *C.char
-	ret := C.wmi_query(wmi_t, C.CString(query), &outval)
+	ret := C.wmi_query(wmi_t, C.CString(query), &outval, c_status)
 
 	if ret != 0 {
-		return nil, fmt.Errorf("wmi query error")
+		var err error
+		if status != 0 {
+			err = fmt.Errorf(fmt.Sprintf("wmi query error: %s", ntstatus.FromCode(status)))
+		} else {
+			err = fmt.Errorf("wmi query error")
+		}
+		return nil, err
 	}
 
 	if outval == nil {
-		return nil, fmt.Errorf("wmi query error")
+		var err error
+		if status != 0 {
+			err = fmt.Errorf(fmt.Sprintf("wmi query error: %s", ntstatus.FromCode(status)))
+		} else {
+			err = fmt.Errorf("wmi query error")
+		}
+		return nil, err
 	}
 	//fmt.Println(C.GoString(outval))
 

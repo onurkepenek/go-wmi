@@ -39,16 +39,17 @@
 
 #ifndef _NASL_OPENVAS_WMI_INTERFACE_H
 #define _NASL_OPENVAS_WMI_INTERFACE_H
-
+#include <stdint.h>
 typedef struct IWbemServices * WMI_HANDLE;
+typedef struct {uint32_t v;} NTSTATUS;
 
 char *wmi_versioninfo ();
 
 WMI_HANDLE
-wmi_connect (int, char **);
+wmi_connect (int argc, char **argv, uint32_t *ntstatus);
 
 int wmi_close (WMI_HANDLE);
-int wmi_query (WMI_HANDLE, const char *, char **);
+int wmi_query (WMI_HANDLE, const char *, char **, uint32_t *ntstatus);
 
 WMI_HANDLE
 wmi_connect_rsop (int, char **);
