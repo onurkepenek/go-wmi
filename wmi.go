@@ -35,13 +35,15 @@ import (
 
 func Query(host string, user string, pass string, namespace string, query string) ([]map[string]interface{}, error) {
 
-	var args_list [5]string
+	var args_list [7]string
 
 	args_list[0] = "wmic"
 	args_list[1] = "-U"
 	args_list[2] = fmt.Sprintf("%s%%%s", user, pass)
 	args_list[3] = fmt.Sprintf("//%s%s", host, "[sign]")
 	args_list[4] = namespace
+	args_list[5] = "--debug-stderr"
+	args_list[6] = "--debuglevel=-1"
 
 	cargs := C.makeCharArray(C.int(len(args_list)))
 	defer C.freeCharArray(cargs, C.int(len(args_list)))
